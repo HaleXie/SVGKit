@@ -8,11 +8,11 @@
 #import "SVGElement.h"
 
 #import "SVGElement_ForParser.h" //.h" // to solve insane Xcode circular dependencies
-#import "StyleSheetList+Mutable.h"
+#import "SVGCDStyleSheetList+Mutable.h"
 
-#import "CSSStyleSheet.h"
-#import "CSSStyleRule.h"
-#import "CSSRuleList+Mutable.h"
+#import "SVGCDCSSStyleSheet.h"
+#import "SVGCDCSSStyleRule.h"
+#import "SVGCDCSSRuleList+Mutable.h"
 
 #import "SVGGElement.h"
 
@@ -50,7 +50,7 @@
 @synthesize style; /**< CSS style, from SVGStylable interface */
 
 /** from SVGStylable interface */
--(CSSValue*) getPresentationAttribute:(NSString*) name
+-(SVGCDCSSValue*) getPresentationAttribute:(NSString*) name
 {
 	NSAssert(FALSE, @"getPresentationAttribute: not implemented yet");
 	return nil;
@@ -98,7 +98,7 @@
 
 /*! Override so that we can automatically set / unset the ownerSVGElement and viewportElement properties,
  as required by SVG Spec */
--(void)setParentNode:(Node *)newParent
+-(void)setParentNode:(SVGCDNode *)newParent
 {
 	[super setParentNode:newParent];
 	
@@ -128,7 +128,7 @@
 		}
 		else
 		{
-			Node* currentAncestor = newParent;
+			SVGCDNode* currentAncestor = newParent;
 			SVGElement*	firstAncestorThatIsAnyKindOfSVGElement = nil;
 			while( firstAncestorThatIsAnyKindOfSVGElement == nil
 				  && currentAncestor != nil ) // if we run out of tree! This would be an error (see below)
@@ -177,14 +177,14 @@
 
 - (void)setRootOfCurrentDocumentFragment:(SVGSVGElement *)root {
     _rootOfCurrentDocumentFragment = root;
-    for (Node *child in self.childNodes)
+    for (SVGCDNode *child in self.childNodes)
         if ([child isKindOfClass:SVGElement.class])
             ((SVGElement *) child).rootOfCurrentDocumentFragment = root;
 }
 
 - (void)setViewportElement:(SVGElement *)viewport {
     _viewportElement = viewport;
-    for (Node *child in self.childNodes)
+    for (SVGCDNode *child in self.childNodes)
         if ([child isKindOfClass:SVGElement.class])
             ((SVGElement *) child).viewportElement = viewport;
 }
@@ -212,7 +212,7 @@
 	/** CSS styles and classes */
 	if ( [self getAttributeNode:@"style"] )
 	{
-		self.style = [[CSSStyleDeclaration alloc] init];
+		self.style = [[SVGCDCSSStyleDeclaration alloc] init];
 		self.style.cssText = [self getAttribute:@"style"]; // causes all the LOCALLY EMBEDDED style info to be parsed
 	}
 	if( [self getAttributeNode:@"class"])
@@ -536,7 +536,7 @@
     return NO;
 }
 
-- (BOOL) styleRule:(CSSStyleRule *) styleRule appliesTo:(SVGElement *) element specificity:(NSInteger*) specificity
+- (BOOL) styleRule:(SVGCDCSSStyleRule *) styleRule appliesTo:(SVGElement *) element specificity:(NSInteger*) specificity
 {
     NSRange nextGroup = [self nextSelectorGroupFromText:styleRule.selectorText startFrom:NSMakeRange(0, 0)];
     while( nextGroup.location != NSNotFound )
@@ -594,20 +594,20 @@
     
     @autoreleasepool /** DOM / CSS is insanely verbose, so this is likely to generate a lot of crud objects */
     {
-        CSSStyleRule *mostSpecificRule = nil;
+        SVGCDCSSStyleRule *mostSpecificRule = nil;
         NSInteger mostSpecificity = -1;
         
-        for( StyleSheet* genericSheet in self.rootOfCurrentDocumentFragment.styleSheets.internalArray.reverseObjectEnumerator ) // because it's far too much effort to use CSS's low-quality iteration here...
+        for( SVGCDStyleSheet* genericSheet in self.rootOfCurrentDocumentFragment.styleSheets.internalArray.reverseObjectEnumerator ) // because it's far too much effort to use CSS's low-quality iteration here...
         {
-            if( [genericSheet isKindOfClass:[CSSStyleSheet class]])
+            if( [genericSheet isKindOfClass:[SVGCDCSSStyleSheet class]])
             {
-                CSSStyleSheet* cssSheet = (CSSStyleSheet*) genericSheet;
+                SVGCDCSSStyleSheet* cssSheet = (SVGCDCSSStyleSheet*) genericSheet;
                 
-                for( CSSRule* genericRule in cssSheet.cssRules.internalArray.reverseObjectEnumerator)
+                for( SVGCDCSSRule* genericRule in cssSheet.cssRules.internalArray.reverseObjectEnumerator)
                 {
-                    if( [genericRule isKindOfClass:[CSSStyleRule class]])
+                    if( [genericRule isKindOfClass:[SVGCDCSSStyleRule class]])
                     {
-                        CSSStyleRule* styleRule = (CSSStyleRule*) genericRule;
+                        SVGCDCSSStyleRule* styleRule = (SVGCDCSSStyleRule*) genericRule;
                         
                         if( [styleRule.style getPropertyCSSValue:stylableProperty] != nil )
                         {
@@ -638,7 +638,7 @@
         /** Finally: move up the tree until you find a <G> or <SVG> node, and ask it to provide the value
          */
         
-        Node* parentElement = self.parentNode;
+        SVGCDNode* parentElement = self.parentNode;
         while( parentElement != nil
               && ! [parentElement isKindOfClass:[SVGGElement class]]
               && ! [parentElement isKindOfClass:[SVGSVGElement class]])

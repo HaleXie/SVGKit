@@ -15,10 +15,10 @@
 
 #import <Foundation/Foundation.h>
 
-#import "Document.h"
+#import "SVGCDDocument.h"
 #import "SVGSVGElement.h"
 
-@interface SVGDocument : Document
+@interface SVGDocument : SVGCDDocument
 
 @property (nonatomic, strong, readonly) NSString* title;
 @property (nonatomic, strong, readonly) NSString* referrer;
