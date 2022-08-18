@@ -6,12 +6,12 @@
  http://www.w3.org/TR/SVG11/struct.html#InterfaceSVGDocument
  */
 
-#import "Document+Mutable.h"
+#import "SVGCDDocument+Mutable.h"
 
 #import "SVGDocument.h"
 #import "SVGDocument_Mutable.h"
 
-#import "NamedNodeMap_Iterable.h" // needed for the allPrefixesByNamespace implementation
+#import "SVGCDNamedNodeMap_Iterable.h" // needed for the allPrefixesByNamespace implementation
 
 #import "SVGKDefine_Private.h"
 
@@ -28,7 +28,7 @@
 
 - (id)init
 {
-    self = [super initType:DOMNodeType_DOCUMENT_NODE name:@"#document"];
+    self = [super initType:SVGCD_DOMNodeType_DOCUMENT_NODE name:@"#document"];
     if (self) {
         
     }
@@ -47,7 +47,7 @@
 	super.documentElement = rootElement;
 }
 
--(void)setDocumentElement:(Element *)newDocumentElement
+-(void)setDocumentElement:(SVGCDElement *)newDocumentElement
 {
 	NSAssert( [newDocumentElement isKindOfClass:[SVGSVGElement class]], @"Cannot set the documentElement property on an SVG doc unless it's of type SVGSVGDocument" );
 	
@@ -79,7 +79,7 @@
 
 /** implementation of allPrefixesByNamespace - stores "namespace string" : "ARRAY of prefix strings"
  */
-+(void) accumulateNamespacesForNode:(Node*) node intoDictionary:(NSMutableDictionary*) output
++(void) accumulateNamespacesForNode:(SVGCDNode*) node intoDictionary:(NSMutableDictionary*) output
 {
 	/**
 	 First, find all the attributes that declare a new Namespace at this point */
@@ -90,7 +90,7 @@
 	
 	for( NSString* xmlnsNodeName in xmlnsNodemap )
 	{
-		Node* namespaceDeclaration = [xmlnsNodemap objectForKey:xmlnsNodeName];
+		SVGCDNode* namespaceDeclaration = [xmlnsNodemap objectForKey:xmlnsNodeName];
 		
 		NSMutableArray* prefixesForNamespace = [output objectForKey:namespaceDeclaration.nodeValue];
 		if( prefixesForNamespace == nil )
@@ -103,7 +103,7 @@
 			[prefixesForNamespace addObject:namespaceDeclaration.localName];
 	}
 	
-	for( Node* childNode in node.childNodes )
+	for( SVGCDNode* childNode in node.childNodes )
 	{
 		[self accumulateNamespacesForNode:childNode intoDictionary:output];
 	}

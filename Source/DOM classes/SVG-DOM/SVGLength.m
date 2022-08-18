@@ -1,7 +1,7 @@
 #import "SVGLength.h"
 
-#import "CSSPrimitiveValue.h"
-#import "CSSPrimitiveValue_ConfigurablePixelsPerInch.h"
+#import "SVGCDCSSPrimitiveValue.h"
+#import "SVGCDCSSPrimitiveValue_ConfigurablePixelsPerInch.h"
 
 #import "SVGUtils.h"
 #import "SVGKDefine_Private.h"
@@ -10,7 +10,7 @@
 #include <sys/sysctl.h>
 
 @interface SVGLength()
-@property(nonatomic,strong) CSSPrimitiveValue* internalCSSPrimitiveValue;
+@property(nonatomic,strong) SVGCDCSSPrimitiveValue* internalCSSPrimitiveValue;
 @end
 
 @implementation SVGLength
@@ -28,7 +28,7 @@
     return nil;
 }
 
-- (id)initWithCSSPrimitiveValue:(CSSPrimitiveValue*) pv
+- (id)initWithCSSPrimitiveValue:(SVGCDCSSPrimitiveValue*) pv
 {
     self = [super init];
     if (self) {
@@ -46,26 +46,26 @@
 {
 	switch( self.internalCSSPrimitiveValue.primitiveType )
 	{
-		case CSS_CM:
+		case     SVGCD_CSS_CM:
 			return SVG_LENGTHTYPE_CM;
-		case CSS_EMS:
+		case     SVGCD_CSS_EMS:
 			return SVG_LENGTHTYPE_EMS;
-		case CSS_EXS:
+		case     SVGCD_CSS_EXS:
 			return SVG_LENGTHTYPE_EXS;
-		case CSS_IN:
+		case SVGCD_CSS_IN:
 			return SVG_LENGTHTYPE_IN;
-		case CSS_MM:
+		case     SVGCD_CSS_MM:
 			return SVG_LENGTHTYPE_MM;
-		case CSS_PC:
+		case SVGCD_CSS_PC:
 			return SVG_LENGTHTYPE_PC;
-		case CSS_PERCENTAGE:
+		case     SVGCD_CSS_PERCENTAGE:
 			return SVG_LENGTHTYPE_PERCENTAGE;
-		case CSS_PT:
+		case SVGCD_CSS_PT:
 			return SVG_LENGTHTYPE_PT;
-		case CSS_PX:
+		case     SVGCD_CSS_PX:
 			return SVG_LENGTHTYPE_PX;
-		case CSS_NUMBER:
-		case CSS_DIMENSION:
+		case     SVGCD_CSS_NUMBER:
+		case SVGCD_CSS_DIMENSION:
 			return SVG_LENGTHTYPE_NUMBER;
 		default:
 			return SVG_LENGTHTYPE_UNKNOWN;
@@ -98,7 +98,7 @@
 static float cachedDevicePixelsPerInch;
 +(SVGLength*) svgLengthFromNSString:(NSString*) s
 {
-	CSSPrimitiveValue* pv = [[CSSPrimitiveValue alloc] init];
+	SVGCDCSSPrimitiveValue* pv = [[SVGCDCSSPrimitiveValue alloc] init];
 	
 	pv.pixelsPerInch = cachedDevicePixelsPerInch;
 	pv.cssText = s;
@@ -110,12 +110,12 @@ static float cachedDevicePixelsPerInch;
 
 -(float) pixelsValue
 {
-	return [self.internalCSSPrimitiveValue getFloatValue:CSS_PX];
+	return [self.internalCSSPrimitiveValue getFloatValue:    SVGCD_CSS_PX];
 }
 
 -(float) pixelsValueWithDimension:(float)dimension
 {
-    if (self.internalCSSPrimitiveValue.primitiveType == CSS_PERCENTAGE)
+    if (self.internalCSSPrimitiveValue.primitiveType ==     SVGCD_CSS_PERCENTAGE)
         return dimension * self.value / 100.0;
     
     return [self pixelsValue];
@@ -123,9 +123,9 @@ static float cachedDevicePixelsPerInch;
 
 -(float) pixelsValueWithGradientDimension:(float)dimension
 {
-    if (self.internalCSSPrimitiveValue.primitiveType == CSS_PERCENTAGE) {
+    if (self.internalCSSPrimitiveValue.primitiveType ==     SVGCD_CSS_PERCENTAGE) {
         return dimension * self.value / 100.0;
-    } else if (self.internalCSSPrimitiveValue.primitiveType == CSS_NUMBER) {
+    } else if (self.internalCSSPrimitiveValue.primitiveType ==     SVGCD_CSS_NUMBER) {
         if (self.value >= 0 && self.value <= 1) {
             return dimension * self.value;
         }
@@ -136,7 +136,7 @@ static float cachedDevicePixelsPerInch;
 
 -(float) numberValue
 {
-	return [self.internalCSSPrimitiveValue getFloatValue:CSS_NUMBER];
+	return [self.internalCSSPrimitiveValue getFloatValue:    SVGCD_CSS_NUMBER];
 }
 
 #pragma mark - secret methods needed to provide an implementation on ObjectiveC
