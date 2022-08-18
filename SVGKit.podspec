@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
                  'Eric Man'        => 'meric.au@gmail.com',
                  'Matt Rajca'      => 'matt.rajca@me.com',
                  'Moritz Pfeiffer' => 'moritz.pfeiffer@alp-phone.ch' }
-  s.source   = { :git => 'https://github.com/SVGKit/SVGKit.git', :tag => s.version.to_s }
+  s.source   = { :git => 'ssh://git@github.com/VIPAAR/SVGKit.git', :tag => "#{s.version}" }
   s.source_files = 'Source/*.{h,m}', 'Source/**/*.{h,m}'
   s.exclude_files = 'Source/include/*.h'
   s.private_header_files = 'Source/SVGKDefine_Private.h'
@@ -24,10 +24,10 @@ Pod::Spec.new do |s|
   s.libraries = 'xml2'
   s.framework = 'QuartzCore', 'CoreText'
   s.dependency 'CocoaLumberjack', '~> 3.0'
-  s.module_map = 'SVGKitLibrary/SVGKit-iOS/SVGKit.modulemap'
+#  s.module_map = 'SVGKitLibrary/SVGKit-iOS/SVGKit.modulemap'
   s.requires_arc = true
   s.pod_target_xcconfig = {
-    'CLANG_CXX_LANGUAGE_STANDARD' => 'gnu++11',
+#    'CLANG_CXX_LANGUAGE_STANDARD' => 'gnu++11',
     'CLANG_CXX_LIBRARY' => 'libc++',
     'HEADER_SEARCH_PATHS' => '$(SDKROOT)/usr/include/libxml2'
   }
