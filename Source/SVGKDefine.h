@@ -13,7 +13,7 @@
 // Apple's defines from TargetConditionals.h are a bit weird.
 // Seems like TARGET_OS_MAC is always defined (on all platforms).
 // To determine if we are running on OSX, we can only rely on TARGET_OS_IPHONE=0 and all the other platforms
-#if !TARGET_OS_IPHONE && !TARGET_OS_IOS && !TARGET_OS_TV && !TARGET_OS_WATCH
+#if TARGET_OS_OSX
 #define SVGKIT_MAC 1
 #else
 #define SVGKIT_MAC 0
@@ -21,7 +21,7 @@
 
 // iOS and tvOS are very similar, UIKit exists on both platforms
 // Note: watchOS also has UIKit, but it's very limited
-#if TARGET_OS_IOS || TARGET_OS_TV
+#if TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_VISION
 #define SVGKIT_UIKIT 1
 #else
 #define SVGKIT_UIKIT 0
@@ -43,6 +43,12 @@
 #define SVGKIT_WATCH 1
 #else
 #define SVGKIT_WATCH 0
+#endif
+
+#if TARGET_OS_VISION
+#define SVGKIT_VISION 1
+#else
+#define SVGKIT_VISION 0
 #endif
 
 #if SVGKIT_MAC
