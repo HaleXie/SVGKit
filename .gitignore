@@ -33,3 +33,4 @@ Carthage/Build
 Pods
 #VScode
 .vscode
+.build

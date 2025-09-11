@@ -1,12 +1,11 @@
-// swift-tools-version:5.1
+// swift-tools-version:6.0
 import PackageDescription
 
 let package = Package(
     name: "SVGKit",
     platforms: [
-        .macOS(.v10_10),
-        .iOS(.v13),
-        .tvOS(.v13)
+        .iOS(.v16),
+        .visionOS(.v2)
     ],
     products: [
         .library(
@@ -19,7 +18,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/CocoaLumberjack/CocoaLumberjack.git", .upToNextMajor(from: "3.7.0"))
+        .package(url: "git@github.com:CocoaLumberjack/CocoaLumberjack.git", exact: "3.9.0")
     ],
     targets: [
         .target(
@@ -30,7 +29,13 @@ let package = Package(
             path: "Source",
             exclude: [
                 "SwiftUI additions"
-            ]
+            ],
+            resources: [.process("Resources/PrivacyInfo.xcprivacy")],
+            publicHeadersPath: "include",            
+            cSettings: [
+                .headerSearchPath("privateHeaders"),
+                .define("NS_BLOCK_ASSERTIONS", to: "1", .when(configuration: .release))
+            ]            
         ),
         .target(
             name: "SVGKitSwift",
