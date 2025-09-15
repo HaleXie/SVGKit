@@ -241,6 +241,7 @@
 			return; // we've added the layer - let Apple take care of the rest!
 		}
 #else
+#if SVGKIT_UIKIT
     switch (self.contentMode) {
       case UIViewContentModeScaleAspectFit:{
         CGFloat nativeAspectRatio = imageBounds.size.width / imageBounds.size.height;
@@ -274,6 +275,11 @@
       }
         
   }
+#else
+    // On macOS, default to scale to fill behavior
+    scaleConvertImageToView = CGSizeMake( self.bounds.size.width / imageBounds.size.width, self.bounds.size.height / imageBounds.size.height );
+    translateSize = CGSizeZero;
+#endif
 #endif
 	}
 	else
