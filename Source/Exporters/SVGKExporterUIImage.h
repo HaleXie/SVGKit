@@ -3,6 +3,9 @@
  
  Uses the default color format from UIGraphicsBeginImageContextWithOptions(...)
  */
+
+#import "SVGKDefine.h"
+#if SVGKIT_UIKIT
 #import <Foundation/Foundation.h>
 #import "SVGKImage.h"
 
@@ -29,3 +32,5 @@
 +(UIImage*) exportAsUIImage:(SVGKImage*) image antiAliased:(BOOL) shouldAntialias curveFlatnessFactor:(CGFloat) multiplyFlatness interpolationQuality:(CGInterpolationQuality) interpolationQuality;
 
 @end
+
+#endif /* SVGKIT_UIKIT */
